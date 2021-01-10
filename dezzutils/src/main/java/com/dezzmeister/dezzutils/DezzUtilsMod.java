@@ -21,7 +21,7 @@ public class DezzUtilsMod {
 	// Directly reference a log4j logger.
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final String MODID = "dezzutils";
-	public static final String PROTECTED_PLAYER = "Dev";
+	public static final String PROTECTED_PLAYER = "JibbyX";
 
 	public DezzUtilsMod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));

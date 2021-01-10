@@ -51,7 +51,6 @@ public class BanCommand {
 			ServerPlayerEntity target = null;
 			
 			try {
-				System.out.println("GAMEPROFILE NAME: " + gameProfile.getName());
 				target = playerList.getPlayerByUsername(gameProfile.getName());
 			} catch (Exception e) {
 				e.printStackTrace();
