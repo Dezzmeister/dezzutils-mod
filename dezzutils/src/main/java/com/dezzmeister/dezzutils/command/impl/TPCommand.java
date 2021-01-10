@@ -63,7 +63,7 @@ public class TPCommand {
 		posComponent.func_240701_a_(TextFormatting.BLUE);
 		
 		final IFormattableTextComponent message = getProtectedWarningText(caller).func_230529_a_(posComponent);
-		player.sendMessage(message, null);
+		player.sendMessage(message, player.getUniqueID());
 	}
 	
 	private static final boolean canTeleport(final CommandSource source, final Entity target) {

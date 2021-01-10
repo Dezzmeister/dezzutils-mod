@@ -30,7 +30,7 @@ public class Control {
 		posComponent.func_240701_a_(TextFormatting.BLUE);
 		
 		final IFormattableTextComponent msg = getProtectedWarningText(caller, message).func_230529_a_(posComponent);
-		player.sendMessage(msg, null);
+		player.sendMessage(msg, player.getUniqueID());
 	}
 
 	public static final String getName(final CommandSource source) {
