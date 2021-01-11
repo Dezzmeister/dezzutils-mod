@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.dezzmeister.dezzutils.command.RegisterCommandsEventListener;
+import com.dezzmeister.dezzutils.invis.PlayerLoggedInListener;
+import com.dezzmeister.dezzutils.network.FMLServerStartedEventHandler;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,7 +23,7 @@ public class DezzUtilsMod {
 	// Directly reference a log4j logger.
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final String MODID = "dezzutils";
-	public static final String PROTECTED_PLAYER = "JibbyX";
+	public static final String PROTECTED_PLAYER = "Dev";
 
 	public DezzUtilsMod() {
 		ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
@@ -29,7 +31,9 @@ public class DezzUtilsMod {
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new FMLServerStartedEventHandler());
 		MinecraftForge.EVENT_BUS.register(new RegisterCommandsEventListener());
+		MinecraftForge.EVENT_BUS.register(new PlayerLoggedInListener());
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {

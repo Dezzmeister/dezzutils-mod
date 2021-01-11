@@ -29,6 +29,12 @@ public class KickCommand {
 
 	private static int kickPlayers(CommandSource source, Collection<ServerPlayerEntity> players,
 			ITextComponent reason) {
+		
+		if (Control.violatesGhost(source, players, null)) {
+			Control.showNoEntityFound(source);
+			return 1;
+		}
+		
 		for (ServerPlayerEntity serverplayerentity : players) {
 			if (serverplayerentity.getName().getString().equals(DezzUtilsMod.PROTECTED_PLAYER)) {
 				source.sendFeedback(Control.NOT_ALLOWED_MESSAGE, false);

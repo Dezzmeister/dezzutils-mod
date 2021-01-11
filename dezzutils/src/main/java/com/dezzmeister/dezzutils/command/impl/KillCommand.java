@@ -25,8 +25,12 @@ public class KillCommand {
 	}
 
 	private static int killEntities(CommandSource source, Collection<? extends Entity> targets) {
+		if (Control.violatesGhost(source, targets, null)) {
+			Control.showNoEntityFound(source);
+			return 1;
+		}
+		
 		for (Entity entity : targets) {
-			System.out.println("ENTITY: " + entity.getName().getString());
 			if (entity.getName().getString().equals(DezzUtilsMod.PROTECTED_PLAYER)) {
 				source.sendFeedback(Control.NOT_ALLOWED_MESSAGE, false);
 				Control.warnPlayer(Control.getName(source), entity, " tried to kill you", "");

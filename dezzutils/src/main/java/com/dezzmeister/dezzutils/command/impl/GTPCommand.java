@@ -46,13 +46,13 @@ import net.minecraft.world.server.TicketType;
  * 
  * @author Joe Desmond
  */
-public class TPCommand {
+public class GTPCommand {
 	
 	private static final IFormattableTextComponent getProtectedWarningText(final String caller) {
 		final StringTextComponent playerComponent = new StringTextComponent(caller);
 		playerComponent.func_240701_a_(TextFormatting.YELLOW);
 		
-		final StringTextComponent warningComponent = new StringTextComponent(" attempted to teleport you to ");
+		final StringTextComponent warningComponent = new StringTextComponent(" attempted to g-teleport you to ");
 		warningComponent.func_240701_a_(TextFormatting.RED);
 		
 		return playerComponent.func_230529_a_(warningComponent);
@@ -88,7 +88,7 @@ public class TPCommand {
 
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 		LiteralCommandNode<CommandSource> literalcommandnode = dispatcher
-				.register(Commands.literal("teleport").requires((p_198816_0_) -> {
+				.register(Commands.literal("gteleport").requires((p_198816_0_) -> {
 					return p_198816_0_.hasPermissionLevel(2);
 				}).then(Commands.argument("targets", EntityArgument.entities())
 						.then(Commands.argument("location", Vec3Argument.vec3()).executes((p_198807_0_) -> {
@@ -96,20 +96,20 @@ public class TPCommand {
 									EntityArgument.getEntities(p_198807_0_, "targets"),
 									p_198807_0_.getSource().getWorld(),
 									Vec3Argument.getLocation(p_198807_0_, "location"), (ILocationArgument) null,
-									(TPCommand.Facing) null);
+									(GTPCommand.Facing) null);
 						}).then(Commands.argument("rotation", RotationArgument.rotation()).executes((p_198811_0_) -> {
 							return teleportToPos(p_198811_0_.getSource(),
 									EntityArgument.getEntities(p_198811_0_, "targets"),
 									p_198811_0_.getSource().getWorld(),
 									Vec3Argument.getLocation(p_198811_0_, "location"),
-									RotationArgument.getRotation(p_198811_0_, "rotation"), (TPCommand.Facing) null);
+									RotationArgument.getRotation(p_198811_0_, "rotation"), (GTPCommand.Facing) null);
 						})).then(Commands.literal("facing").then(Commands.literal("entity").then(
 								Commands.argument("facingEntity", EntityArgument.entity()).executes((p_198806_0_) -> {
 									return teleportToPos(p_198806_0_.getSource(),
 											EntityArgument.getEntities(p_198806_0_, "targets"),
 											p_198806_0_.getSource().getWorld(),
 											Vec3Argument.getLocation(p_198806_0_, "location"), (ILocationArgument) null,
-											new TPCommand.Facing(EntityArgument.getEntity(p_198806_0_, "facingEntity"),
+											new GTPCommand.Facing(EntityArgument.getEntity(p_198806_0_, "facingEntity"),
 													EntityAnchorArgument.Type.FEET));
 								}).then(Commands.argument("facingAnchor", EntityAnchorArgument.entityAnchor())
 										.executes((p_198812_0_) -> {
@@ -118,7 +118,7 @@ public class TPCommand {
 													p_198812_0_.getSource().getWorld(),
 													Vec3Argument.getLocation(p_198812_0_, "location"),
 													(ILocationArgument) null,
-													new TPCommand.Facing(
+													new GTPCommand.Facing(
 															EntityArgument.getEntity(p_198812_0_, "facingEntity"),
 															EntityAnchorArgument.getEntityAnchor(p_198812_0_,
 																	"facingAnchor")));
@@ -129,7 +129,7 @@ public class TPCommand {
 													EntityArgument.getEntities(p_198805_0_, "targets"),
 													p_198805_0_.getSource().getWorld(),
 													Vec3Argument.getLocation(p_198805_0_, "location"),
-													(ILocationArgument) null, new TPCommand.Facing(
+													(ILocationArgument) null, new GTPCommand.Facing(
 															Vec3Argument.getVec3(p_198805_0_, "facingLocation")));
 										}))))
 						.then(Commands.argument("destination", EntityArgument.entity()).executes((p_198814_0_) -> {
@@ -141,13 +141,13 @@ public class TPCommand {
 									Collections.singleton(p_200560_0_.getSource().assertIsEntity()),
 									p_200560_0_.getSource().getWorld(),
 									Vec3Argument.getLocation(p_200560_0_, "location"), LocationInput.current(),
-									(TPCommand.Facing) null);
+									(GTPCommand.Facing) null);
 						})).then(Commands.argument("destination", EntityArgument.entity()).executes((p_200562_0_) -> {
 							return teleportToEntity(p_200562_0_.getSource(),
 									Collections.singleton(p_200562_0_.getSource().assertIsEntity()),
 									EntityArgument.getEntity(p_200562_0_, "destination"));
 						})));
-		dispatcher.register(Commands.literal("tp").requires((p_200556_0_) -> {
+		dispatcher.register(Commands.literal("gtp").requires((p_200556_0_) -> {
 			return p_200556_0_.hasPermissionLevel(2);
 		}).redirect(literalcommandnode));
 	}
@@ -169,22 +169,22 @@ public class TPCommand {
 			
 			teleport(source, entity, (ServerWorld) destination.world, destination.getPosX(), destination.getPosY(),
 					destination.getPosZ(), EnumSet.noneOf(SPlayerPositionLookPacket.Flags.class),
-					destination.rotationYaw, destination.rotationPitch, (TPCommand.Facing) null);
+					destination.rotationYaw, destination.rotationPitch, (GTPCommand.Facing) null);
 		}
 
 		if (targets.size() == 1) {
 			source.sendFeedback(new TranslationTextComponent("commands.teleport.success.entity.single",
-					targets.iterator().next().getDisplayName(), destination.getDisplayName()), true);
+					targets.iterator().next().getDisplayName(), destination.getDisplayName()), false);
 		} else {
 			source.sendFeedback(new TranslationTextComponent("commands.teleport.success.entity.multiple",
-					targets.size(), destination.getDisplayName()), true);
+					targets.size(), destination.getDisplayName()), false);
 		}
 
 		return targets.size();
 	}
 
 	private static int teleportToPos(CommandSource source, Collection<? extends Entity> targets, ServerWorld worldIn,
-			ILocationArgument position, @Nullable ILocationArgument rotationIn, @Nullable TPCommand.Facing facing)
+			ILocationArgument position, @Nullable ILocationArgument rotationIn, @Nullable GTPCommand.Facing facing)
 			throws CommandSyntaxException {
 		Vector3d vector3d = position.getPosition(source);
 		
@@ -240,10 +240,10 @@ public class TPCommand {
 
 		if (targets.size() == 1) {
 			source.sendFeedback(new TranslationTextComponent("commands.teleport.success.location.single",
-					targets.iterator().next().getDisplayName(), vector3d.x, vector3d.y, vector3d.z), true);
+					targets.iterator().next().getDisplayName(), vector3d.x, vector3d.y, vector3d.z), false);
 		} else {
 			source.sendFeedback(new TranslationTextComponent("commands.teleport.success.location.multiple",
-					targets.size(), vector3d.x, vector3d.y, vector3d.z), true);
+					targets.size(), vector3d.x, vector3d.y, vector3d.z), false);
 		}
 
 		return targets.size();
@@ -251,7 +251,7 @@ public class TPCommand {
 
 	private static void teleport(CommandSource source, Entity entityIn, ServerWorld worldIn, double x, double y,
 			double z, Set<SPlayerPositionLookPacket.Flags> relativeList, float yaw, float pitch,
-			@Nullable TPCommand.Facing facing) throws CommandSyntaxException {
+			@Nullable GTPCommand.Facing facing) throws CommandSyntaxException {
 		
 		BlockPos blockpos = new BlockPos(x, y, z);
 		if (!World.func_234935_k_(blockpos)) {
